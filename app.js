@@ -5,9 +5,21 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+// Database
+
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/shakespeare_annotate');
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function callback () {
+  console.log("YAY!")
+});
+
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var annotations = require('./routes/annotations');
 
 var app = express();
 
@@ -26,6 +38,7 @@ app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/annotations', annotations);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
