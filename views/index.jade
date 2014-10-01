@@ -3,11 +3,16 @@ extends layout
 block content
 
   div(ng-controller="AppCtrl")
+
+    div(ng-bind-html="testing")
+
+
     h1 Sonnet 1
 
-    .sonnet
-      p(ng-repeat="line in poem", line-number="{{$index + 1}}", annotate) {{line}}
+    .sonnet(annotate)
+      p(ng-repeat="line in poem", line-number="{{$index + 1}}", ng-bind-html="line", annotations)
 
     div.panel(ng-show="showPanel")
       h1 {{annotation.quote}}
       input(ng-model="annotation.text", ng-keydown="submitAnnotation($event)")
+
