@@ -1,6 +1,18 @@
 var express = require('express');
 var router = express.Router();
-var Annotation = require('../models/annotation')
+var Pusher = require('pusher');
+var secrets = require('../secrets');
+
+var Annotation = require('../models/annotation');
+
+
+var pusher = new Pusher({
+	appId: secrets.pusherAppId,
+	key: secrets.pusherAppKey,
+	secret: secrets.pusherSecret
+});
+
+
 
 router.get('/', function(req, res){
 	var annotations = Annotation.find({}, function(err, annotations){
@@ -9,10 +21,9 @@ router.get('/', function(req, res){
 });
 
 router.post('/', function(req, res){
-	console.log(req.body);
 	var annotation = new Annotation(req.body);
 	annotation.save(function(err, instance){
-		console.log(instance);
+		pusher.trigger('annotations_channel', 'new_annotation', instance)
 	});
 });
 

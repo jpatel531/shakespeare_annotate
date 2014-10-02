@@ -1,4 +1,17 @@
-angular.module('Sonnets', ['ngSanitize', 'ui.bootstrap']).controller 'AppCtrl', ($scope, $document, $http) ->
+app = angular.module('Sonnets', ['ngSanitize', 'ui.bootstrap', 'doowb.angular-pusher'])
+
+app.config ['PusherServiceProvider',
+	(PusherServiceProvider) ->
+		PusherServiceProvider
+		.setToken('8dd714bf0a643abe835e')
+		.setOptions({});
+]
+
+app.controller 'AppCtrl', ($scope, $document, $http, Pusher) ->
+
+	Pusher.subscribe 'annotations_channel', 'new_annotation', (annotation)->
+		$scope.annotations.push annotation
+
 
 	$http.get('/annotations').success (data) ->
 		$scope.annotations = data
@@ -7,7 +20,6 @@ angular.module('Sonnets', ['ngSanitize', 'ui.bootstrap']).controller 'AppCtrl', 
 
 	$scope.submitAnnotation = (e)->
 		if e.keyCode is 13
-			console.log $scope.annotation
 			$http.post('/annotations', $scope.annotation)
 			$scope.resetSelection()
 
@@ -15,7 +27,7 @@ angular.module('Sonnets', ['ngSanitize', 'ui.bootstrap']).controller 'AppCtrl', 
 		$scope.annotation = null
 		$scope.showPanel = false
 
-angular.module('Sonnets').directive 'annotate', ->
+app.directive 'annotate', ->
 
 	{		
 		scope: {lineNumber: '@'}
@@ -32,16 +44,17 @@ angular.module('Sonnets').directive 'annotate', ->
 						}
 	}
 
-angular.module('Sonnets').directive 'annotations', ($compile) ->
+app.directive 'annotations', ($compile) ->
 
 	{
 		restrict: 'A',
 		link: ($scope, element, attrs) ->
-			$scope.$parent.$watch 'annotations', ->
+			$scope.$parent.$watch 'annotations', (->
 				_.each $scope.$parent.annotations, (annotation) ->
 					if parseInt(attrs.lineNumber) is parseInt(annotation.lineNumber)
 						html = ($scope.$parent.poem[attrs.lineNumber - 1]
 							.replace annotation.quote, "<a href='#' tooltip='#{annotation.text}'>#{annotation.quote}</a>")
 						e = $compile("<p>" + html + "</p>")($scope);
 						element.replaceWith e
+			), true
 	}
