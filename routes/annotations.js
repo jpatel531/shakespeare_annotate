@@ -9,7 +9,7 @@ router.get('/', function(req, res){
 });
 
 router.post('/', function(req, res){
-	// console.log(req.body);
+	console.log(req.body);
 	var annotation = new Annotation(req.body);
 	annotation.save(function(err, instance){
 		console.log(instance);

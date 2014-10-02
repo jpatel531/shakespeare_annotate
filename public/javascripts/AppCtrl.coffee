@@ -7,6 +7,7 @@ angular.module('Sonnets', ['ngSanitize', 'ui.bootstrap']).controller 'AppCtrl', 
 
 	$scope.submitAnnotation = (e)->
 		if e.keyCode is 13
+			console.log $scope.annotation
 			$http.post('/annotations', $scope.annotation)
 			$scope.resetSelection()
 
@@ -16,16 +17,18 @@ angular.module('Sonnets', ['ngSanitize', 'ui.bootstrap']).controller 'AppCtrl', 
 
 angular.module('Sonnets').directive 'annotate', ->
 
-	{		link: ($scope, el, attrs) ->
-
+	{		
+		scope: {lineNumber: '@'}
+		link: ($scope, el, attrs) ->
 			el.bind 'click', ->
+				lineNumber =  angular.element(window.getSelection().baseNode.parentElement)[0].getAttribute('line-number')
 				selection = window.getSelection().toString()
 				if selection isnt "" 
 					$scope.$apply -> 
 						$scope.$parent.showPanel = true
 						$scope.$parent.annotation = {
 							quote: selection, 
-							lineNumber: attrs.lineNumber,
+							lineNumber: lineNumber,
 						}
 	}
 
