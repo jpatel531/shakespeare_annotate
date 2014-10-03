@@ -2,17 +2,21 @@ extends layout
 
 block content
 
-  div(ng-controller="AppCtrl")
 
-    div(ng-bind-html="testing")
+	.row(ng-controller="AppCtrl")
+
+		.col-md-6
+
+			h1 Sonnet 1
+
+			.sonnet(annotate)
+				p(ng-repeat="line in poem", line-number="{{$index + 1}}", ng-bind-html="line", annotations)
 
 
-    h1 Sonnet 1
+		.col-md-6
+			div.panel(ng-show="showPanel")
+				h1 {{annotation.quote}}
+				input(ng-model="annotation.text", ng-keydown="submitAnnotation($event)")
 
-    .sonnet(annotate)
-      p(ng-repeat="line in poem", line-number="{{$index + 1}}", ng-bind-html="line", annotations)
-
-    div.panel(ng-show="showPanel")
-      h1 {{annotation.quote}}
-      input(ng-model="annotation.text", ng-keydown="submitAnnotation($event)")
-
+			//- div.annotations
+			//- 	{{annotations | }}

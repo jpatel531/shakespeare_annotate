@@ -11,7 +11,8 @@ app.config([
 
 app.controller('AppCtrl', function($scope, $document, $http, Pusher) {
   Pusher.subscribe('annotations_channel', 'new_annotation', function(annotation) {
-    return $scope.annotations.push(annotation);
+    $scope.annotations.push(annotation);
+    return console.log($scope.annotations);
   });
   $http.get('/annotations').success(function(data) {
     return $scope.annotations = data;
@@ -38,6 +39,7 @@ app.directive('annotate', function() {
       return el.bind('click', function() {
         var lineNumber, selection;
         lineNumber = angular.element(window.getSelection().baseNode.parentElement)[0].getAttribute('line-number');
+        console.log(lineNumber);
         selection = window.getSelection().toString();
         if (selection !== "") {
           return $scope.$apply(function() {
@@ -61,8 +63,8 @@ app.directive('annotations', function($compile) {
         return _.each($scope.$parent.annotations, function(annotation) {
           var e, html;
           if (parseInt(attrs.lineNumber) === parseInt(annotation.lineNumber)) {
-            html = $scope.$parent.poem[attrs.lineNumber - 1].replace(annotation.quote, "<a href='#' tooltip='" + annotation.text + "'>" + annotation.quote + "</a>");
-            e = $compile("<p>" + html + "</p>")($scope);
+            html = $scope.$parent.poem[attrs.lineNumber - 1].replace(annotation.quote, "<mark><span tooltip='" + annotation.text + "'>" + annotation.quote + "</span></mark>");
+            e = $compile(("<p line-number='" + attrs.lineNumber + "'>") + html + "</p>")($scope);
             return element.replaceWith(e);
           }
         });
