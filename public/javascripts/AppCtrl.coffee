@@ -11,7 +11,6 @@ app.controller 'AppCtrl', ($scope, $document, $http, Pusher) ->
 
 	Pusher.subscribe 'annotations_channel', 'new_annotation', (annotation)->
 		$scope.annotations.push annotation
-		console.log $scope.annotations
 
 
 	$http.get('/annotations').success (data) ->
@@ -35,7 +34,6 @@ app.directive 'annotate', ->
 		link: ($scope, el, attrs) ->
 			el.bind 'click', ->
 				lineNumber =  angular.element(window.getSelection().baseNode.parentElement)[0].getAttribute('line-number')
-				console.log lineNumber
 				selection = window.getSelection().toString()
 				if selection isnt "" 
 					$scope.$apply -> 
@@ -51,11 +49,22 @@ app.directive 'annotations', ($compile) ->
 	{
 		restrict: 'A',
 		link: ($scope, element, attrs) ->
-			$scope.$parent.$watch 'annotations', (->
-				_.each $scope.$parent.annotations, (annotation) ->
-					if parseInt(attrs.lineNumber) is parseInt(annotation.lineNumber)
-						html = ($scope.$parent.poem[attrs.lineNumber - 1].replace annotation.quote, "<mark><span tooltip='#{annotation.text}'>#{annotation.quote}</span></mark>")
-						e = $compile("<p line-number='#{attrs.lineNumber}'>" + html + "</p>")($scope)
-						element.replaceWith e
-			), true
+
+			element.bind 'mouseenter', ->
+				$scope.$apply -> $scope.$parent.selectedLine = attrs.lineNumber
+
+
+			# $scope.$parent.$watch 'annotations', (->
+			# 	_.each $scope.$parent.annotations, (annotation) ->
+			# 		if parseInt(attrs.lineNumber) is parseInt(annotation.lineNumber)
+			# 			html = ($scope.$parent.poem[attrs.lineNumber - 1].replace annotation.quote, "<mark><span tooltip='#{annotation.text}'>#{annotation.quote}</span></mark>")
+			# 			e = $compile("<p line-number='#{attrs.lineNumber}'>" + html + "</p>")($scope)
+			# 			element.replaceWith e
+			# ), true
 	}
+
+app.filter 'byLine', ->
+
+	(annotations, lineNumber) ->
+		_.where(annotations, {lineNumber: lineNumber})
+

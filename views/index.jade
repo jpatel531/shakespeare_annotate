@@ -18,5 +18,11 @@ block content
 				h1 {{annotation.quote}}
 				input(ng-model="annotation.text", ng-keydown="submitAnnotation($event)")
 
-			//- div.annotations
-			//- 	{{annotations | }}
+			{{selectedLine}}
+
+			div.annotations(ng-show="selectedLine")
+				div(ng-repeat="annotation in annotations | byLine:selectedLine")
+					p {{annotation.quote}}
+					blockquote {{annotation.text}}
+
+
