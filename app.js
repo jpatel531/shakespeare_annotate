@@ -20,7 +20,6 @@ db.once('open', function callback () {
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var annotations = require('./routes/annotations');
 var sonnets = require('./routes/sonnets');
 var api = require('./routes/api')
 
@@ -41,7 +40,6 @@ app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 
 app.use('/', routes);
 app.use('/users', users);
-app.use('/annotations', annotations);
 app.use('/sonnets', sonnets);
 app.use('/api', api)
 

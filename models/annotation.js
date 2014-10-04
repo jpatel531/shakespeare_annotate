@@ -7,6 +7,4 @@ var annotationSchema = mongoose.Schema({
 	category: String
 });
 
-var Annotation = mongoose.model('Annotation', annotationSchema);
-
-module.exports = Annotation;
+module.exports = annotationSchema;
