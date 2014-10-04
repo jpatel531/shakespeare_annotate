@@ -1,0 +1,28 @@
+extends layout
+
+block content
+
+	.row(ng-controller="AppCtrl")
+
+		.col-md-6
+
+			h2 {{poem.title}}
+
+			.sonnet(annotate)
+				p(ng-repeat="line in poem.text", line-number="{{$index + 1}}", ng-bind-html="line", annotations)
+
+
+		.col-md-6
+			div.panel(ng-show="showPanel")
+				h1 {{annotation.quote}}
+				form.form-group(name = "annotationForm", ng-keydown="annotationForm.$valid && submitAnnotation($event)", novalidate)
+					input.form-control(ng-model="annotation.text", placeholder="Your annotation", required)
+					input.form-control(ng-model="annotation.category", typeahead="category for category in categories", placeholder="Annotation category")
+
+			div.annotations(ng-show="selectedLine")
+				div(ng-repeat="annotation in annotations | byLine:selectedLine")
+					i {{annotation.quote}}
+					blockquote {{annotation.text}}
+					small {{annotation.category}}
+
+

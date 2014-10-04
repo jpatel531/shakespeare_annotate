@@ -9,24 +9,29 @@ app.config([
   }
 ]);
 
-app.controller('AppCtrl', function($scope, $document, $http, Pusher) {
+app.controller('AppCtrl', function($scope, $document, $http, Pusher, $location) {
+  var routeParam;
+  routeParam = /sonnets\/(\d+)/.exec($location.absUrl())[1];
+  $http.get("/api/sonnets/" + routeParam).success(function(data) {
+    return $scope.poem = data;
+  });
   Pusher.subscribe('annotations_channel', 'new_annotation', function(annotation) {
     return $scope.annotations.push(annotation);
   });
   $http.get('/annotations').success(function(data) {
     return $scope.annotations = data;
   });
-  $scope.poem = ["From fairest creatures we desire increase, ", "That thereby beauty's rose might never die, ", "But as the riper should by time decease, ", "His tender heir might bear his memory:", "But thou, contracted to thine own bright eyes,", "Feed'st thy light's flame with self-substantial fuel,", "Making a famine where abundance lies, ", "Thyself thy foe, to thy sweet self too cruel.", "Thou that art now the world's fresh ornament ", "And only herald to the gaudy spring, ", "Within thine own bud buriest thy content ", "And, tender churl, makest waste in niggarding. ", "Pity the world, or else this glutton be, ", "To eat the world's due, by the grave and thee."];
   $scope.submitAnnotation = function(e) {
     if (e.keyCode === 13) {
       $http.post('/annotations', $scope.annotation);
       return $scope.resetSelection();
     }
   };
-  return $scope.resetSelection = function() {
+  $scope.resetSelection = function() {
     $scope.annotation = null;
     return $scope.showPanel = false;
   };
+  return $scope.categories = ["Glossing", "Analysis", "Textual Variants", "Sources", "Scansion", "Early Modern Language", "Historical Context", "Rhetorical Tropes", "Reception", "Performance"];
 });
 
 app.directive('annotate', function() {

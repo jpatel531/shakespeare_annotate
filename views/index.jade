@@ -2,27 +2,4 @@ extends layout
 
 block content
 
-
-	.row(ng-controller="AppCtrl")
-
-		.col-md-6
-
-			h1 Sonnet 1
-
-			.sonnet(annotate)
-				p(ng-repeat="line in poem", line-number="{{$index + 1}}", ng-bind-html="line", annotations)
-
-
-		.col-md-6
-			div.panel(ng-show="showPanel")
-				h1 {{annotation.quote}}
-				input(ng-model="annotation.text", ng-keydown="submitAnnotation($event)")
-
-			{{selectedLine}}
-
-			div.annotations(ng-show="selectedLine")
-				div(ng-repeat="annotation in annotations | byLine:selectedLine")
-					p {{annotation.quote}}
-					blockquote {{annotation.text}}
-
-
+	p Hello World

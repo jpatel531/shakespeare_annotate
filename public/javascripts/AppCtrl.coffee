@@ -7,7 +7,12 @@ app.config ['PusherServiceProvider',
 		.setOptions({});
 ]
 
-app.controller 'AppCtrl', ($scope, $document, $http, Pusher) ->
+app.controller 'AppCtrl', ($scope, $document, $http, Pusher, $location) ->
+
+	routeParam = /sonnets\/(\d+)/.exec($location.absUrl())[1]
+
+	$http.get("/api/sonnets/#{routeParam}").success (data)->
+		$scope.poem = data
 
 	Pusher.subscribe 'annotations_channel', 'new_annotation', (annotation)->
 		$scope.annotations.push annotation
@@ -16,7 +21,7 @@ app.controller 'AppCtrl', ($scope, $document, $http, Pusher) ->
 	$http.get('/annotations').success (data) ->
 		$scope.annotations = data
 
-	$scope.poem = ["From fairest creatures we desire increase, ", "That thereby beauty's rose might never die, ", "But as the riper should by time decease, ", "His tender heir might bear his memory:", "But thou, contracted to thine own bright eyes,", "Feed'st thy light's flame with self-substantial fuel,", "Making a famine where abundance lies, ", "Thyself thy foe, to thy sweet self too cruel.", "Thou that art now the world's fresh ornament ", "And only herald to the gaudy spring, ", "Within thine own bud buriest thy content ", "And, tender churl, makest waste in niggarding. ", "Pity the world, or else this glutton be, ", "To eat the world's due, by the grave and thee."] 
+	# $scope.poem = ["From fairest creatures we desire increase, ", "That thereby beauty's rose might never die, ", "But as the riper should by time decease, ", "His tender heir might bear his memory:", "But thou, contracted to thine own bright eyes,", "Feed'st thy light's flame with self-substantial fuel,", "Making a famine where abundance lies, ", "Thyself thy foe, to thy sweet self too cruel.", "Thou that art now the world's fresh ornament ", "And only herald to the gaudy spring, ", "Within thine own bud buriest thy content ", "And, tender churl, makest waste in niggarding. ", "Pity the world, or else this glutton be, ", "To eat the world's due, by the grave and thee."] 
 
 	$scope.submitAnnotation = (e)->
 		if e.keyCode is 13
@@ -26,6 +31,19 @@ app.controller 'AppCtrl', ($scope, $document, $http, Pusher) ->
 	$scope.resetSelection = -> 
 		$scope.annotation = null
 		$scope.showPanel = false
+
+	$scope.categories = [
+		"Glossing",
+		"Analysis",
+		"Textual Variants",
+		"Sources",
+		"Scansion",
+		"Early Modern Language",
+		"Historical Context",
+		"Rhetorical Tropes",
+		"Reception",
+		"Performance"
+	]
 
 app.directive 'annotate', ->
 
@@ -53,14 +71,6 @@ app.directive 'annotations', ($compile) ->
 			element.bind 'mouseenter', ->
 				$scope.$apply -> $scope.$parent.selectedLine = attrs.lineNumber
 
-
-			# $scope.$parent.$watch 'annotations', (->
-			# 	_.each $scope.$parent.annotations, (annotation) ->
-			# 		if parseInt(attrs.lineNumber) is parseInt(annotation.lineNumber)
-			# 			html = ($scope.$parent.poem[attrs.lineNumber - 1].replace annotation.quote, "<mark><span tooltip='#{annotation.text}'>#{annotation.quote}</span></mark>")
-			# 			e = $compile("<p line-number='#{attrs.lineNumber}'>" + html + "</p>")($scope)
-			# 			element.replaceWith e
-			# ), true
 	}
 
 app.filter 'byLine', ->
