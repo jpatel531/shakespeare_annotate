@@ -14,6 +14,12 @@ var pusher = new Pusher({
 
 /* GET home page. */
 
+router.get('/sonnets-overview', function(req, res){
+	Sonnet.find({}, {title: true, number: true}, function(err, sonnets){
+		res.json(sonnets)
+	});
+});
+
 router.get('/sonnets/:number', function(req, res){
 	var number = parseInt(req.params.number)
 	Sonnet.findOne({number: number}, function(err, sonnet){
