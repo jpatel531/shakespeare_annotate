@@ -2,4 +2,9 @@ extends layout
 
 block content
 
-	p Hello World
+	div(ng-controller="SonnetIndexCtrl")
+
+		div(ng-repeat="sonnet in sonnets | orderBy:'number'")
+
+			h3 
+				a(href="/sonnets/{{sonnet.number}}") {{sonnet.title}}
