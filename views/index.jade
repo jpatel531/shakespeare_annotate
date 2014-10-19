@@ -2,6 +2,8 @@ extends layout
 
 block content
 
+	{{members.count}}
+
 	div(ng-controller="SonnetIndexCtrl")
 
 		div(ng-repeat="sonnet in sonnets | orderBy:'number'")

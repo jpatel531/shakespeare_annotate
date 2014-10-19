@@ -1,4 +1,8 @@
-angular.module('Sonnets').controller 'SonnetShowCtrl', ($scope, $document, $http, Pusher, $location, AnnotationCategories) ->
+angular.module('Sonnets').controller 'SonnetShowCtrl', ($scope, $document, $http, $pusher, $location, AnnotationCategories) ->
+
+	client = new Pusher('8dd714bf0a643abe835e')
+
+	pusher = $pusher client
 
 	sonnetId = /sonnets\/(\d+)/.exec($location.absUrl())[1]
 
@@ -6,7 +10,10 @@ angular.module('Sonnets').controller 'SonnetShowCtrl', ($scope, $document, $http
 		$scope.poem = data
 		$scope.annotations = $scope.poem.annotations
 
-	Pusher.subscribe 'annotations_channel', 'new_annotation', (poem)->
+
+	annotationsChannel = pusher.subscribe 'annotations_channel'
+
+	annotationsChannel.bind 'new_annotation', (poem)->
 		$scope.$apply -> 
 			$scope.annotations = poem.annotations
 
@@ -17,3 +24,9 @@ angular.module('Sonnets').controller 'SonnetShowCtrl', ($scope, $document, $http
 			$scope.annotation = null
 
 	$scope.categories = AnnotationCategories
+
+	presenceChannel = pusher.subscribe 'presence-users'
+
+	$scope.members = presenceChannel.members
+
+
