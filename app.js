@@ -21,7 +21,9 @@ db.once('open', function callback () {
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var sonnets = require('./routes/sonnets');
-var api = require('./routes/api')
+var api = require('./routes/api');
+var pusher = require('./routes/pusher')
+
 
 var app = express();
 
@@ -42,6 +44,7 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/sonnets', sonnets);
 app.use('/api', api);
+app.use('/pusher', pusher);
 
 
 // catch 404 and forward to error handler

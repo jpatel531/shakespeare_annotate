@@ -1,0 +1,25 @@
+{
+  "name": "shakespeare_annotate",
+  "version": "0.0.0",
+  "homepage": "https://github.com/jpatel531/shakespeare_annotate",
+  "authors": [
+    "jpatel531 <jamie@notespublication.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-bootstrap": "~0.11.2",
+    "angular-sanitize": "~1.2.25",
+    "bootstrap": "~3.2.0",
+    "underscore": "~1.7.0",
+    "pusher-angular": "~0.1.1",
+    "angular-pusher": "~0.0.13",
+    "pusher": "~2.2.3"
+  }
+}

@@ -1,16 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var Sonnet = require('../models/sonnet');
-var Pusher = require('pusher');
-var secrets = require('../secrets');
-
+var pusher = require('../pusherConfig')
 // Pusher
-
-var pusher = new Pusher({
-	appId: secrets.pusherAppId,
-	key: secrets.pusherAppKey,
-	secret: secrets.pusherSecret
-});
 
 /* GET home page. */
 
